@@ -1,0 +1,47 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: database-getmodel
+  namespace: database
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: database-getmodel
+    spec:
+      containers:
+        - name: getmodel
+          image: gmt.reg.me/frame/maven-dependency:v2
+          command:
+            - /bin/sh
+          args:
+            - /workspace/pack.sh
+          volumeMounts:
+            - name: database-getmodel-pack
+              mountPath: /workspace/pack.sh
+              subPath: pack.sh
+              readOnly: true
+            - name: database-getmodel-set
+              mountPath: /project/src/main/java/com/app/AppSet.java
+              subPath: AppSet.java
+              readOnly: true
+            - name: database-getmodel-get
+              mountPath: /project/src/main/java/com/app/AppGet.java
+              subPath: AppGet.java
+              readOnly: true
+
+      volumes:
+        - name: database-getmodel-pack
+          configMap:
+            name: database-getmodel-pack
+            defaultMode: 0755
+        - name: database-getmodel-set
+          configMap:
+            name: database-getmodel-set
+            defaultMode: 0755
+        - name: database-getmodel-get
+          configMap:
+            name: database-getmodel-get
+            defaultMode: 0755
+
