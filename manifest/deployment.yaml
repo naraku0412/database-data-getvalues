@@ -1,47 +1,90 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: database-getmodel
+  labels:
+    app: getvalues-database
+  name: database-getvalue
   namespace: database
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: database-getmodel
+        app: getvalues-database
     spec:
       containers:
-        - name: getmodel
-          image: gmt.reg.me/frame/maven-dependency:v2
+        #maven
+        - name: getvalue
+          image: gmt.reg.me/frame/maven-dependency:v4
           command:
             - /bin/sh
           args:
             - /workspace/pack.sh
           volumeMounts:
-            - name: database-getmodel-pack
+            - name: database-getvalue-pack
               mountPath: /workspace/pack.sh
               subPath: pack.sh
               readOnly: true
-            - name: database-getmodel-set
+            - name: database-getvalue-set
               mountPath: /project/src/main/java/com/app/AppSet.java
               subPath: AppSet.java
               readOnly: true
-            - name: database-getmodel-get
+            - name: database-getvalue-get
               mountPath: /project/src/main/java/com/app/AppGet.java
               subPath: AppGet.java
               readOnly: true
-
+            - name: share-jar
+              mountPath: /workspace
+        - name: redis1
+          image: redis:5
+          imagePullPolicy: IfNotPresent
+       #server
+        - name: server
+          image: gmt.reg.me/frame/jdk-node:v4
+          command:
+            - node
+          args:
+            - /workspace/server.js
+          volumeMounts:
+            - name: database-getvalue-server
+              mountPath: /workspace/server.js
+              subPath: server.js
+              readOnly: true
+            - name: database-getvalue-valueset
+              mountPath: /workspace/valueset.sh
+              subPath: valueset.sh
+              readOnly: true
+            - name: database-getvalue-valueget
+              mountPath: /workspace/valueget.sh
+              subPath: valueget.sh
+              readOnly: true
+            - name: share-jar
+              mountPath: /workspace
+            
       volumes:
-        - name: database-getmodel-pack
+        - name: database-getvalue-pack
           configMap:
-            name: database-getmodel-pack
+            name: database-getvalue-pack
             defaultMode: 0755
-        - name: database-getmodel-set
+        - name: database-getvalue-set
           configMap:
-            name: database-getmodel-set
+            name: database-getvalue-set
             defaultMode: 0755
-        - name: database-getmodel-get
+        - name: database-getvalue-get
           configMap:
-            name: database-getmodel-get
+            name: database-getvalue-get
             defaultMode: 0755
-
+        - name: database-getvalue-server
+          configMap:
+            name: database-getvalue-server
+            defaultMode: 0755
+        - name: database-getvalue-valueset
+          configMap:
+            name: database-getvalue-valueset
+            defaultMode: 0755
+        - name: database-getvalue-valueget
+          configMap:
+            name: database-getvalue-valueget
+            defaultMode: 0755
+        - name: share-jar
+          emptyDir: {}

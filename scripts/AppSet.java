@@ -27,11 +27,13 @@ public class AppSet
    public static void main(String args[]) throws Exception {
      CommandLineParser parser = new BasicParser( );
      String keyInput  = "";
-     String ipInput = "";
+     String ipInput = "127.0.0.1";
+     String valueInput = "";
      Options options = new Options();
 
      options.addOption("k","keyInput", true, "The input key");
      options.addOption("i","ipInput", true, "The input ip");
+     options.addOption("v","valueInput", true, "The input value");
      CommandLine commandLine = parser.parse( options, args );
      if( commandLine.hasOption('k') ) {
          keyInput = commandLine.getOptionValue('k');
@@ -39,14 +41,18 @@ public class AppSet
      if( commandLine.hasOption('i') ) {
          ipInput = commandLine.getOptionValue('i');
      }
+     if( commandLine.hasOption('v') ) {
+         valueInput = commandLine.getOptionValue('v');
+     }
 
 
-     File file=new File("/workspace/getModelDef");
+     /*File file=new File("/workspaced/getModelDef");
      String content= FileUtils.readFileToString(file,"UTF-8");
      JSONObject jsonObject=new JSONObject(content);
      String js = jsonObject.toString();
-     //System.out.println(jsonObject.toString());
+     System.out.println(jsonObject.toString())*/
      Jedis jedis = new Jedis(ipInput);
-     jedis.set(keyInput,js);
+     jedis.set(keyInput,valueInput);
+     System.out.println(valueInput);
     }
 }    
