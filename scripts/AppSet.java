@@ -53,6 +53,7 @@ public class AppSet
      System.out.println(jsonObject.toString())*/
      Jedis jedis = new Jedis(ipInput);
      jedis.set(keyInput,valueInput);
-     System.out.println(valueInput);
+     //System.out.println(valueInput);
+     logger.info("The data is set in the database!");
     }
 }    

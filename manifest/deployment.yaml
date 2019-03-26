@@ -2,20 +2,20 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   labels:
-    app: getvalues-database
-  name: database-getvalue
+    app: database-getvalues
+  name: database-getvalue-record
   namespace: database
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: getvalues-database
+        app: database-getvalues
     spec:
       containers:
         #maven
         - name: getvalue
-          image: gmt.reg.me/frame/maven-dependency:v4
+          image: gmt.reg.me/frame/maven-getvalues
           command:
             - /bin/sh
           args:
@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: IfNotPresent
        #server
         - name: server
-          image: gmt.reg.me/frame/jdk-node:v4
+          image: gmt.reg.me/frame/jn-getvalues
           command:
             - node
           args:

@@ -50,7 +50,7 @@ public class AppGet
      String js = jedis.get(keyInput);
      JSONObject json = JSON.parseObject(js);
      //System.out.println(json);   
-     String fail = "{\"replyCode\":{\"code\": -1,\"message\":\"查询的表不存在\"},}";
+     String fail = "{\"replyCode\":{\"code\":-1,\"message\":\"查询的表不存在\"}}";
      JSONObject fjson = JSON.parseObject(fail);
      if(js!=null){
        //System.out.println(js);
@@ -58,7 +58,7 @@ public class AppGet
        //logger.info("The data is get!");
     }else{
        //logger.warn("The data does not exist in the database!");
-       System.out.println(fjson);
+       System.out.println(fail);
      }
    }
 }
